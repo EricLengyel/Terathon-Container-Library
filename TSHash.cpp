@@ -8,7 +8,6 @@
 
 
 #include "TSHash.h"
-#include "TSTools.h"
 
 
 using namespace Terathon;
@@ -125,8 +124,6 @@ void HashTableBucket::PurgeBucket(void)
 
 HashTableBase::HashTableBase(int32 initialBucketCount, int32 maxAverageDepth)
 {
-	Assert((initialBucketCount & (initialBucketCount - 1)) == 0, "HashTableBase::HashTableBase(), bucket count must be a power of 2");
-
 	elementCount = 0;
 	bucketCount = initialBucketCount;
 	resizeLimit = initialBucketCount * maxAverageDepth;

@@ -15,7 +15,7 @@
 //# \prefix		Utilities/
 
 
-#include "TSPlatform.h"
+#include "TSBasic.h"
 
 
 #define TERATHON_ARRAY 1
@@ -475,11 +475,7 @@ namespace Terathon
 	template <typename type, int32 baseCount>
 	void Array<type, baseCount>::SetReservedCount(int32 count)
 	{
-		count = (count >= 4) ? count : 4;
-		int32 expandCount = (reservedCount / 2 + 3) & ~3;
-		int32 totalCount = reservedCount + ((expandCount >= baseCount) ? expandCount : baseCount);
-		reservedCount = (totalCount >= count) ? totalCount : count;
-
+		reservedCount = Max(Max(count, 4), reservedCount + Max((reservedCount / 2 + 3) & ~3, baseCount));
 		type *newPointer = reinterpret_cast<type *>(new char[sizeof(type) * reservedCount]);
 
 		type *pointer = arrayPointer;
@@ -789,11 +785,7 @@ namespace Terathon
 	template <typename type>
 	void Array<type, 0>::SetReservedCount(int32 count)
 	{
-		count = (count >= 4) ? count : 4;
-		int32 expandCount = (reservedCount / 2 + 3) & ~3;
-		int32 totalCount = reservedCount + ((expandCount >= 4) ? expandCount : 4);
-		reservedCount = (totalCount >= count) ? totalCount : count;
-
+		reservedCount = Max(Max(count, 4), reservedCount + Max((reservedCount / 2 + 3) & ~3, 4));
 		type *newPointer = reinterpret_cast<type *>(new char[sizeof(type) * reservedCount]);
 
 		type *pointer = arrayPointer;
