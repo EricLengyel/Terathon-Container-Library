@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2022, Terathon Software LLC
+// Copyright 1999-2023, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -301,7 +301,7 @@ namespace Terathon
 		{
 			if (arrayPointer[a] == element)
 			{
-				return (a);
+				return (int32(a));
 			}
 		}
 
@@ -380,14 +380,15 @@ namespace Terathon
 	Array<type, baseCount>::Array(const Array& array)
 	{
 		elementCount = array.elementCount;
-		reservedCount = array.reservedCount;
 
 		if (elementCount > baseCount)
 		{
+			reservedCount = array.reservedCount;
 			arrayPointer = reinterpret_cast<type *>(new char[sizeof(type) * reservedCount]);
 		}
 		else
 		{
+			reservedCount = baseCount;
 			arrayPointer = reinterpret_cast<type *>(arrayStorage);
 		}
 
@@ -401,14 +402,15 @@ namespace Terathon
 	Array<type, baseCount>::Array(Array&& array)
 	{
 		elementCount = array.elementCount;
-		reservedCount = array.reservedCount;
 
 		if (elementCount > baseCount)
 		{
+			reservedCount = array.reservedCount;
 			arrayPointer = array.arrayPointer;
 		}
 		else
 		{
+			reservedCount = baseCount;
 			arrayPointer = reinterpret_cast<type *>(arrayStorage);
 
 			type *pointer = array.arrayPointer;
