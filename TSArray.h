@@ -338,7 +338,7 @@ namespace Terathon
 			using ImmutableArray<type>::reservedCount;
 			using ImmutableArray<type>::arrayPointer;
 
-			char		arrayStorage[baseCount * sizeof(type)];
+			alignas(type) char		arrayStorage[baseCount * sizeof(type)];
 
 			void SetReservedCount(int32 count);
 
