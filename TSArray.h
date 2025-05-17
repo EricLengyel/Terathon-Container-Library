@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2023, Terathon Software LLC
+// Copyright 1999-2025, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -11,8 +11,8 @@
 #define TSArray_h
 
 
-//# \component	Utility Library
-//# \prefix		Utilities/
+/// \component	Utility Library
+/// \prefix		Utilities/
 
 
 #include "TSBasic.h"
@@ -23,224 +23,224 @@
 
 namespace Terathon
 {
-	//# \class	Array	A container class that holds an array of objects.
-	//
-	//# The $Array$ class represents a dynamically resizable array of objects
-	//# for which any entry can be accessed in constant time.
-	//
-	//# \def	template <typename type, int32 baseCount = 0> class Array final : public ImmutableArray<type>
-	//
-	//# \tparam		type			The type of the class that can be stored in the array.
-	//# \tparam		baseCount		The minimum number of array elements for which storage is available inside the $Array$ object itself.
-	//
-	//# \ctor	explicit Array(int32 count = 0);
-	//
-	//# \param	count	The number of array elements for which space is initially reserved in the array's storage.
-	//
-	//# \desc
-	//# The $Array$ class represents a homogeneous array of objects whose type is given by the
-	//# $type$ template parameter. Upon construction, the initial size of the array is zero, but
-	//# space is reserved for the number of objects given by the $count$ parameter. The array is
-	//# stored contiguously in memory, allowing constant-time random access to its elements.
-	//#
-	//# As elements are added to the array (using the $@Array::AppendArrayElement@$ function), the storage
-	//# size is automatically increased to a size somewhat larger than that needed to store the new
-	//# element. The cost of adding an element is thus amortized linear time.
-	//#
-	//# If the $baseCount$ template parameter is zero (the default), then storage space for the array
-	//# elements is always allocated on the heap separately from the $Array$ object. If the value of
-	//# $baseCount$ is greater than zero, then space for that number of array elements is built into the
-	//# structure of the $Array$ object so that no separate allocations need to be made until the size
-	//# of the array exceeds the value of $baseCount$.
-	//#
-	//# The $count$ parameter can only be specified if the $baseCount$ template parameter is zero.
-	//#
-	//# An $Array$ object can be implicitly converted to a pointer to its first element. This allows the
-	//# use of the $[]$ operator to access individual elements of the array.
-	//#
-	//# It is possible to iterate over the elements of an array using a range-based for loop.
-	//# This is illustrated by the following code, where $array$ is a variable of type $Array<type>$.
-	//
-	//# \source
-	//# for (type& element : array)\n
-	//# {\n
-	//# \t...\n
-	//# }
-	//
-	//# \privbase	ImmutableArray<type>	Used internally.
-	//
-	//# \also	$@List@$
+	/// \class	Array	A container class that holds an array of objects.
+	///
+	/// The $Array$ class represents a dynamically resizable array of objects
+	/// for which any entry can be accessed in constant time.
+	///
+	/// \def	template <typename type, int32 baseCount = 0> class Array final : public ImmutableArray<type>
+	///
+	/// \tparam		type			The type of the class that can be stored in the array.
+	/// \tparam		baseCount		The minimum number of array elements for which storage is available inside the $Array$ object itself.
+	///
+	/// \ctor	explicit Array(int32 count = 0);
+	///
+	/// \param	count	The number of array elements for which space is initially reserved in the array's storage.
+	///
+	/// \desc
+	/// The $Array$ class represents a homogeneous array of objects whose type is given by the
+	/// $type$ template parameter. Upon construction, the initial size of the array is zero, but
+	/// space is reserved for the number of objects given by the $count$ parameter. The array is
+	/// stored contiguously in memory, allowing constant-time random access to its elements.
+	///
+	/// As elements are added to the array (using the $@Array::AppendArrayElement@$ function), the storage
+	/// size is automatically increased to a size somewhat larger than that needed to store the new
+	/// element. The cost of adding an element is thus amortized linear time.
+	///
+	/// If the $baseCount$ template parameter is zero (the default), then storage space for the array
+	/// elements is always allocated on the heap separately from the $Array$ object. If the value of
+	/// $baseCount$ is greater than zero, then space for that number of array elements is built into the
+	/// structure of the $Array$ object so that no separate allocations need to be made until the size
+	/// of the array exceeds the value of $baseCount$.
+	///
+	/// The $count$ parameter can only be specified if the $baseCount$ template parameter is zero.
+	///
+	/// An $Array$ object can be implicitly converted to a pointer to its first element. This allows the
+	/// use of the $[]$ operator to access individual elements of the array.
+	///
+	/// It is possible to iterate over the elements of an array using a range-based for loop.
+	/// This is illustrated by the following code, where $array$ is a variable of type $Array<type>$.
+	///
+	/// \source
+	/// for (type& element : array)\n
+	/// {\n
+	/// \t...\n
+	/// }
+	///
+	/// \privbase	ImmutableArray<type>	Used internally.
+	///
+	/// \also	$@List@$
 
 
-	//# \function	Array::GetArrayElementCount		Returns the current size of an array.
-	//
-	//# \proto	int32 GetArrayElementCount(void) const;
-	//
-	//# \desc
-	//# The $GetArrayElementCount$ function returns the number of objects currently stored in an array.
-	//# When an array is constructed, its initial element count is zero.
-	//
-	//# \also	$@Array::SetArrayElementCount@$
-	//# \also	$@Array::AppendArrayElement@$
-	//# \also	$@Array::InsertArrayElement@$
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::RemoveLastArrayElement@$
+	/// \function	Array::GetArrayElementCount		Returns the current size of an array.
+	///
+	/// \proto	int32 GetArrayElementCount(void) const;
+	///
+	/// \desc
+	/// The $GetArrayElementCount$ function returns the number of objects currently stored in an array.
+	/// When an array is constructed, its initial element count is zero.
+	///
+	/// \also	$@Array::SetArrayElementCount@$
+	/// \also	$@Array::AppendArrayElement@$
+	/// \also	$@Array::InsertArrayElement@$
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::RemoveLastArrayElement@$
 
 
-	//# \function	Array::SetArrayElementCount		Sets the current size of an array.
-	//
-	//# \proto	void SetArrayElementCount(int32 count);
-	//# \proto	void SetArrayElementCount(int32 count, const type& init);
-	//
-	//# \param	count	The new size of the array.
-	//# \param	init	A reference to an object that is used to copy-construct new objects in the array.
-	//
-	//# \desc
-	//# The $SetArrayElementCount$ function sets the number of objects currently stored in an array.
-	//# If $count$ is greater than the current size of the array, then space is allocated for
-	//# $count$ objects and each new object is copy-constructed from the value of the $init$ parameter.
-	//# If $count$ is less than the current size of the array, then the logical size of the array
-	//# is reduced, and each object beyond the new size of the array is destroyed in reverse order.
-	//#
-	//# If the $init$ parameter is omitted, then any new objects created are default-constructed if the
-	//# type of object stored in the array is a non-POD type. If the type of object stored in the array is
-	//# a POD type, then any new objects created are left uninitialized.
-	//
-	//# \also	$@Array::GetArrayElementCount@$
-	//# \also	$@Array::AppendArrayElement@$
-	//# \also	$@Array::InsertArrayElement@$
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::RemoveLastArrayElement@$
+	/// \function	Array::SetArrayElementCount		Sets the current size of an array.
+	///
+	/// \proto	void SetArrayElementCount(int32 count);
+	/// \proto	void SetArrayElementCount(int32 count, const type& init);
+	///
+	/// \param	count	The new size of the array.
+	/// \param	init	A reference to an object that is used to copy-construct new objects in the array.
+	///
+	/// \desc
+	/// The $SetArrayElementCount$ function sets the number of objects currently stored in an array.
+	/// If $count$ is greater than the current size of the array, then space is allocated for
+	/// $count$ objects and each new object is copy-constructed from the value of the $init$ parameter.
+	/// If $count$ is less than the current size of the array, then the logical size of the array
+	/// is reduced, and each object beyond the new size of the array is destroyed in reverse order.
+	///
+	/// If the $init$ parameter is omitted, then any new objects created are default-constructed if the
+	/// type of object stored in the array is a non-POD type. If the type of object stored in the array is
+	/// a POD type, then any new objects created are left uninitialized.
+	///
+	/// \also	$@Array::GetArrayElementCount@$
+	/// \also	$@Array::AppendArrayElement@$
+	/// \also	$@Array::InsertArrayElement@$
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::RemoveLastArrayElement@$
 
 
-	//# \function	Array::AppendArrayElement		Adds an object to the end of an array.
-	//
-	//# \proto	template <typename T> type *AppendArrayElement(T&& element);
-	//# \proto	template <typename T> type *AppendArrayElement(void);
-	//
-	//# \param	element		The new element to add to the array.
-	//
-	//# \desc
-	//# The $AppendArrayElement$ function increases the size of an array by one and either copy-constructs
-	//# or move-constructs the new element using the object referenced by the $element$ parameter,
-	//# depending on whether an lvalue reference or rvalue reference is passed to the function.
-	//# If the parameter is omitted, then a default-constructed element is appended to the array.
-	//# The return value is a pointer to the newly appended element in the array.
-	//
-	//# \also	$@Array::InsertArrayElement@$
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::RemoveLastArrayElement@$
-	//# \also	$@Array::GetArrayElementCount@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::AppendArrayElement		Adds an object to the end of an array.
+	///
+	/// \proto	template <typename T> type *AppendArrayElement(T&& element);
+	/// \proto	template <typename T> type *AppendArrayElement(void);
+	///
+	/// \param	element		The new element to add to the array.
+	///
+	/// \desc
+	/// The $AppendArrayElement$ function increases the size of an array by one and either copy-constructs
+	/// or move-constructs the new element using the object referenced by the $element$ parameter,
+	/// depending on whether an lvalue reference or rvalue reference is passed to the function.
+	/// If the parameter is omitted, then a default-constructed element is appended to the array.
+	/// The return value is a pointer to the newly appended element in the array.
+	///
+	/// \also	$@Array::InsertArrayElement@$
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::RemoveLastArrayElement@$
+	/// \also	$@Array::GetArrayElementCount@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::InsertArrayElement		Inserts an object into an array.
-	//
-	//# \proto	template <typename T> void InsertArrayElement(int32 index, T&& element);
-	//
-	//# \param	index		The location at which the object is to be inserted.
-	//# \param	element		The new element to insert into the array.
-	//
-	//# \desc
-	//# The $InsertArrayElement$ function increases the size of an array by one, moves all of the existing
-	//# elements at location $index$ or greater up by one, and either copy-constructs or move-constructs
-	//# the new element into the array using the object referenced by the $element$ parameter, depending on
-	//# whether an lvalue reference or rvalue reference is passed to the function. When the existing elements
-	//# are moved, they are move-constructed in their new locations, and the old objects are destroyed.
-	//#
-	//# If the $index$ parameter is greater than or equal to the current size of the array, then the
-	//# array is enlarged to the size $index&#x202F;+&#x202F;1$. In this case, elements between the old size and
-	//# new size are default-constructed if the type of object stored in the array is a non-POD type, and the
-	//# elements are left uninitialized if the type of object stored in the array is a POD type.
-	//
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::AppendArrayElement@$
-	//# \also	$@Array::GetArrayElementCount@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::InsertArrayElement		Inserts an object into an array.
+	///
+	/// \proto	template <typename T> void InsertArrayElement(int32 index, T&& element);
+	///
+	/// \param	index		The location at which the object is to be inserted.
+	/// \param	element		The new element to insert into the array.
+	///
+	/// \desc
+	/// The $InsertArrayElement$ function increases the size of an array by one, moves all of the existing
+	/// elements at location $index$ or greater up by one, and either copy-constructs or move-constructs
+	/// the new element into the array using the object referenced by the $element$ parameter, depending on
+	/// whether an lvalue reference or rvalue reference is passed to the function. When the existing elements
+	/// are moved, they are move-constructed in their new locations, and the old objects are destroyed.
+	///
+	/// If the $index$ parameter is greater than or equal to the current size of the array, then the
+	/// array is enlarged to the size $index&#x202F;+&#x202F;1$. In this case, elements between the old size and
+	/// new size are default-constructed if the type of object stored in the array is a non-POD type, and the
+	/// elements are left uninitialized if the type of object stored in the array is a POD type.
+	///
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::AppendArrayElement@$
+	/// \also	$@Array::GetArrayElementCount@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::RemoveArrayElement		Removes an object from an array.
-	//
-	//# \proto	void RemoveArrayElement(int32 index);
-	//
-	//# \param	index	The location at which to remove an object.
-	//
-	//# \desc
-	//# The $RemoveArrayElement$ function decreases the size of an array by one, destroys the object at location
-	//# $index$, and moves all of the existing elements at location $index&#x202F;+&#x202F;1$ or greater down by one.
-	//# When the existing elements are moved, they are move-constructed to their new locations, and the old
-	//# objects are destroyed.
-	//#
-	//# If the $index$ parameter is greater than or equal to the current size of the array, then
-	//# calling the $RemoveArrayElement$ function has no effect.
-	//
-	//# \also	$@Array::RemoveLastArrayElement@$
-	//# \also	$@Array::InsertArrayElement@$
-	//# \also	$@Array::AppendArrayElement@$
-	//# \also	$@Array::GetArrayElementCount@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::RemoveArrayElement		Removes an object from an array.
+	///
+	/// \proto	void RemoveArrayElement(int32 index);
+	///
+	/// \param	index	The location at which to remove an object.
+	///
+	/// \desc
+	/// The $RemoveArrayElement$ function decreases the size of an array by one, destroys the object at location
+	/// $index$, and moves all of the existing elements at location $index&#x202F;+&#x202F;1$ or greater down by one.
+	/// When the existing elements are moved, they are move-constructed to their new locations, and the old
+	/// objects are destroyed.
+	///
+	/// If the $index$ parameter is greater than or equal to the current size of the array, then
+	/// calling the $RemoveArrayElement$ function has no effect.
+	///
+	/// \also	$@Array::RemoveLastArrayElement@$
+	/// \also	$@Array::InsertArrayElement@$
+	/// \also	$@Array::AppendArrayElement@$
+	/// \also	$@Array::GetArrayElementCount@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::RemoveLastArrayElement		Removes the last object from an array.
-	//
-	//# \proto	void RemoveLastArrayElement(void);
-	//
-	//# \desc
-	//# The $RemoveLastArrayElement$ function decreases the size of an array by one and destroys the object at the
-	//# original end of the array.
-	//#
-	//# If the array is empty, then calling the $RemoveLastArrayElement$ function has no effect.
-	//
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::InsertArrayElement@$
-	//# \also	$@Array::AppendArrayElement@$
-	//# \also	$@Array::GetArrayElementCount@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::RemoveLastArrayElement		Removes the last object from an array.
+	///
+	/// \proto	void RemoveLastArrayElement(void);
+	///
+	/// \desc
+	/// The $RemoveLastArrayElement$ function decreases the size of an array by one and destroys the object at the
+	/// original end of the array.
+	///
+	/// If the array is empty, then calling the $RemoveLastArrayElement$ function has no effect.
+	///
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::InsertArrayElement@$
+	/// \also	$@Array::AppendArrayElement@$
+	/// \also	$@Array::GetArrayElementCount@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::ClearArray		Removes all objects from an array.
-	//
-	//# \proto	void ClearArray(void);
-	//
-	//# \desc
-	//# The $ClearArray$ function destroys all objects in an array (in reverse order) and sets the size of
-	//# the array to zero. The storage for the array is not deallocated, so this function is best used
-	//# when the array is likely to be filled with a similar amount of data again. To both destroy all
-	//# objects in an array and deallocate the storage, call the $@Array::PurgeArray@$ function.
-	//
-	//# \also	$@Array::PurgeArray@$
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::RemoveLastArrayElement@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::ClearArray		Removes all objects from an array.
+	///
+	/// \proto	void ClearArray(void);
+	///
+	/// \desc
+	/// The $ClearArray$ function destroys all objects in an array (in reverse order) and sets the size of
+	/// the array to zero. The storage for the array is not deallocated, so this function is best used
+	/// when the array is likely to be filled with a similar amount of data again. To both destroy all
+	/// objects in an array and deallocate the storage, call the $@Array::PurgeArray@$ function.
+	///
+	/// \also	$@Array::PurgeArray@$
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::RemoveLastArrayElement@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::PurgeArray		Removes all objects from an array and deallocates storage.
-	//
-	//# \proto	void PurgeArray(void);
-	//
-	//# \desc
-	//# The $PurgeArray$ function destroys all objects in an array (in reverse order) and sets the size of
-	//# the array to zero. The storage for the array is also deallocated, returning the array to its
-	//# initial state. To destory all objects in an array without deallocating the storage, call the
-	//# $@Array::ClearArray@$ function.
-	//
-	//# \also	$@Array::ClearArray@$
-	//# \also	$@Array::RemoveArrayElement@$
-	//# \also	$@Array::RemoveLastArrayElement@$
-	//# \also	$@Array::SetArrayElementCount@$
+	/// \function	Array::PurgeArray		Removes all objects from an array and deallocates storage.
+	///
+	/// \proto	void PurgeArray(void);
+	///
+	/// \desc
+	/// The $PurgeArray$ function destroys all objects in an array (in reverse order) and sets the size of
+	/// the array to zero. The storage for the array is also deallocated, returning the array to its
+	/// initial state. To destory all objects in an array without deallocating the storage, call the
+	/// $@Array::ClearArray@$ function.
+	///
+	/// \also	$@Array::ClearArray@$
+	/// \also	$@Array::RemoveArrayElement@$
+	/// \also	$@Array::RemoveLastArrayElement@$
+	/// \also	$@Array::SetArrayElementCount@$
 
 
-	//# \function	Array::FindArrayElementIndex		Finds a specific element in an array.
-	//
-	//# \proto	int32 FindArrayElementIndex(const type& element) const;
-	//
-	//# \param	element		The value of the element to find.
-	//
-	//# \desc
-	//# The $FindArrayElementIndex$ function searches an array for the first element matching the value
-	//# passed into the $element$ parameter based on the $==$ operator. If a match is found, its index
-	//# is returned. If no match is found, then the return value is &minus;1. The running time of this
-	//# function is <i>O</i>(<i>n</i>), where <i>n</i> is the number of elements in the array.
+	/// \function	Array::FindArrayElementIndex		Finds a specific element in an array.
+	///
+	/// \proto	int32 FindArrayElementIndex(const type& element) const;
+	///
+	/// \param	element		The value of the element to find.
+	///
+	/// \desc
+	/// The $FindArrayElementIndex$ function searches an array for the first element matching the value
+	/// passed into the $element$ parameter based on the $==$ operator. If a match is found, its index
+	/// is returned. If no match is found, then the return value is &minus;1. The running time of this
+	/// function is <i>O</i>(<i>n</i>), where <i>n</i> is the number of elements in the array.
 
 
 	template <typename type>
@@ -254,8 +254,9 @@ namespace Terathon
 			type		*arrayPointer;
 
 			inline ImmutableArray() = default;
-			ImmutableArray(const ImmutableArray& array) {}
 			inline ~ImmutableArray() = default;
+
+			ImmutableArray(const ImmutableArray&) {}
 
 		public:
 
