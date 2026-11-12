@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -388,16 +388,14 @@ namespace Terathon
 	void HashTable<type>::InsertHashTableElement(type *element)
 	{
 		HashTableBucket *bucket = element->owningHashTableBucket;
-		if (!bucket)
-		{
-			if (elementCount >= resizeLimit)
-			{
-				ResizeBucketTable();
-			}
-		}
-		else
+		if (bucket)
 		{
 			bucket->RemoveBucketElement(element);
+		}
+
+		if (elementCount >= resizeLimit)
+		{
+			ResizeBucketTable();
 		}
 
 		const KeyType& key = element->GetKey();

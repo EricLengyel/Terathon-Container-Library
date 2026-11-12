@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -132,7 +132,7 @@ HashTableBase::HashTableBase(int32 initialBucketCount, int32 maxAverageDepth)
 {
 	#ifdef TERATHON_TOOLS
 
-		Assert((initialBucketCount & (initialBucketCount - 1)) == 0, "HashTableBase::HashTableBase(), bucket count must be a power of 2");
+		Assert((initialBucketCount > 0) && ((initialBucketCount & (initialBucketCount - 1)) == 0), "HashTableBase::HashTableBase(), bucket count must be a power of 2");
 
 	#endif
 
@@ -141,7 +141,7 @@ HashTableBase::HashTableBase(int32 initialBucketCount, int32 maxAverageDepth)
 	resizeLimit = initialBucketCount * maxAverageDepth;
 
 	bucketTable = reinterpret_cast<HashTableBucket *>(new char[sizeof(HashTableBucket) * initialBucketCount]);
-	for (machine a = 0; a < initialBucketCount; a++)
+	for (int32 a = 0; a < initialBucketCount; a++)
 	{
 		new(&bucketTable[a]) HashTableBucket(this);
 	}
@@ -149,7 +149,7 @@ HashTableBase::HashTableBase(int32 initialBucketCount, int32 maxAverageDepth)
 
 HashTableBase::~HashTableBase()
 {
-	for (machine a = bucketCount - 1; a >= 0; a--)
+	for (int32 a = bucketCount - 1; a >= 0; a--)
 	{
 		bucketTable[a].~HashTableBucket();
 	}
@@ -159,7 +159,7 @@ HashTableBase::~HashTableBase()
 
 void HashTableBase::RemoveAllHashTableElements(void)
 {
-	for (machine a = bucketCount - 1; a >= 0; a--)
+	for (int32 a = bucketCount - 1; a >= 0; a--)
 	{
 		bucketTable[a].RemoveAllBucketElements();
 	}
@@ -169,7 +169,7 @@ void HashTableBase::RemoveAllHashTableElements(void)
 
 void HashTableBase::PurgeHashTable(void)
 {
-	for (machine a = bucketCount - 1; a >= 0; a--)
+	for (int32 a = bucketCount - 1; a >= 0; a--)
 	{
 		bucketTable[a].PurgeBucket();
 	}
@@ -181,7 +181,7 @@ void HashTableBase::ResizeBucketTable(void)
 {
 	int32 newBucketCount = bucketCount * 2;
 	HashTableBucket *newBucketTable = reinterpret_cast<HashTableBucket *>(new char[sizeof(HashTableBucket) * newBucketCount]);
-	for (machine a = 0; a < newBucketCount; a++)
+	for (int32 a = 0; a < newBucketCount; a++)
 	{
 		new(&newBucketTable[a]) HashTableBucket(this);
 	}
@@ -189,7 +189,7 @@ void HashTableBase::ResizeBucketTable(void)
 	elementCount = 0;
 
 	int32 count = bucketCount;
-	for (machine a = count - 1; a >= 0; a--)
+	for (int32 a = count - 1; a >= 0; a--)
 	{
 		HashTableBucket *bucket = &bucketTable[a];
 		HashTableElementBase *element = bucket->firstBucketElement;

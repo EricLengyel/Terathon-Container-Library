@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -158,9 +158,9 @@ MapBase::~MapBase()
 	PurgeMap();
 }
 
-MapElementBase *MapBase::operator [](machine index) const
+MapElementBase *MapBase::operator [](int32 index) const
 {
-	machine i = 0;
+	int32 i = 0;
 	MapElementBase *element = GetFirstMapElement();
 	while (element)
 	{
@@ -178,7 +178,7 @@ MapElementBase *MapBase::operator [](machine index) const
 
 int32 MapBase::GetMapElementCount(void) const
 {
-	machine count = 0;
+	int32 count = 0;
 	const MapElementBase *element = GetFirstMapElement();
 	while (element)
 	{
@@ -570,6 +570,10 @@ void MapBase::ReplaceMapElement(MapElementBase *element, MapElementBase *replace
 		{
 			super->rightSubnode = replacement;
 		}
+	}
+	else
+	{
+		rootElement = replacement;
 	}
 
 	replacement->superNode = super;

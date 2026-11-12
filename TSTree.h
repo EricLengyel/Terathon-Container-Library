@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -78,6 +78,7 @@ namespace Terathon
 			TERATHON_API const TreeBase *GetRootNode(void) const;
 
 			TERATHON_API bool Successor(const TreeBase *node) const;
+			TERATHON_API bool Follower(const TreeBase *node) const;
 
 			TERATHON_API TreeBase *GetLeftmostNode(void);
 			TERATHON_API const TreeBase *GetLeftmostNode(void) const;
@@ -355,6 +356,8 @@ namespace Terathon
 	/// If the node being added is already a member of a different tree of the same type, then it is first removed from that tree.
 	/// If the node has subnodes itself, then those subnodes are carried with the node into the new tree.
 	///
+	/// The $node$ parameter must not point to the node for which the $AppendSubnode$ function is called or any of its ancestors.
+	///
 	/// \also	$@Tree::PrependSubnode@$
 	/// \also	$@Tree::InsertSubnodeBefore@$
 	/// \also	$@Tree::InsertSubnodeAfter@$
@@ -375,6 +378,8 @@ namespace Terathon
 	///
 	/// If the node being added is already a member of a different tree of the same type, then it is first removed from that tree.
 	/// If the node has subnodes itself, then those subnodes are carried with the node into the new tree.
+	///
+	/// The $node$ parameter must not point to the node for which the $AppendSubnode$ function is called or any of its ancestors.
 	///
 	/// \also	$@Tree::AppendSubnode@$
 	/// \also	$@Tree::InsertSubnodeBefore@$
@@ -401,6 +406,8 @@ namespace Terathon
 	/// If the node being added is already a member of a different tree of the same type, then it is first removed from that tree.
 	/// If the node has subnodes itself, then those subnodes are carried with the node into the new tree.
 	///
+	/// The $node$ parameter must not point to the node for which the $AppendSubnode$ function is called or any of its ancestors.
+	///
 	/// \also	$@Tree::InsertSubnodeAfter@$
 	/// \also	$@Tree::AppendSubnode@$
 	/// \also	$@Tree::PrependSubnode@$
@@ -425,6 +432,8 @@ namespace Terathon
 	///
 	/// If the node being added is already a member of a different tree of the same type, then it is first removed from that tree.
 	/// If the node has subnodes itself, then those subnodes are carried with the node into the new tree.
+	///
+	/// The $node$ parameter must not point to the node for which the $AppendSubnode$ function is called or any of its ancestors.
 	///
 	/// \also	$@Tree::InsertSubnodeBefore@$
 	/// \also	$@Tree::AppendSubnode@$
@@ -494,8 +503,23 @@ namespace Terathon
 	///
 	/// \desc
 	/// The $Successor$ function returns $true$ if the node specified by the $node$ parameter is a successor
-	/// of the node for which the function is called. If the node is not a successor, this function returns $false$.
+	/// of the node for which the function is called. If $node$ is not a successor, this function returns $false$.
 	///
+	/// \also	$@Tree::Follower@$
+	/// \also	$@Tree::GetSuperNode@$
+	/// \also	$@Tree::GetRootNode@$
+
+
+	/// \function	Tree::Follower		Returns a boolean value indicating whether one node is a follower of another.
+	///
+	/// \proto	bool Follower(const Tree<type> *node) const;
+	///
+	/// \desc
+	/// The $Follower$ function returns $true$ if the node specified by the $node$ parameter is a follower
+	/// of the node for which the function is called in the list of subnodes. If $node$ does not come later in the
+	/// subnode list, this function returns $false$.
+	///
+	/// \also	$@Tree::Successor@$
 	/// \also	$@Tree::GetSuperNode@$
 	/// \also	$@Tree::GetRootNode@$
 
@@ -549,6 +573,11 @@ namespace Terathon
 			bool Successor(const Tree<type> *node) const
 			{
 				return (TreeBase::Successor(node));
+			}
+
+			bool Follower(const Tree<type> *node) const
+			{
+				return (TreeBase::Follower(node));
 			}
 
 			type *GetLeftmostNode(void)

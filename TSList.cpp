@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -23,7 +23,7 @@ ListElementBase::~ListElementBase()
 
 int32 ListElementBase::GetListIndex(void) const
 {
-	machine index = 0;
+	int32 index = 0;
 
 	const ListElementBase *element = this;
 	for (;;)
@@ -37,7 +37,7 @@ int32 ListElementBase::GetListIndex(void) const
 		index++;
 	}
 
-	return (int32(index));
+	return (index);
 }
 
 void ListElementBase::Detach(void)
@@ -54,9 +54,9 @@ ListBase::~ListBase()
 	PurgeList();
 }
 
-ListElementBase *ListBase::operator [](machine index) const
+ListElementBase *ListBase::operator [](int32 index) const
 {
-	machine i = 0;
+	int32 i = 0;
 	ListElementBase *element = firstListElement;
 	while (element)
 	{
@@ -74,7 +74,7 @@ ListElementBase *ListBase::operator [](machine index) const
 
 int32 ListBase::GetListElementCount(void) const
 {
-	machine count = 0;
+	int32 count = 0;
 	const ListElementBase *element = firstListElement;
 	while (element)
 	{
@@ -82,7 +82,7 @@ int32 ListBase::GetListElementCount(void) const
 		element = element->nextListElement;
 	}
 
-	return (int32(count));
+	return (count);
 }
 
 void ListBase::PrependListElement(ListElementBase *element)

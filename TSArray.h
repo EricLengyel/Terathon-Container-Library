@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -106,6 +106,8 @@ namespace Terathon
 	/// type of object stored in the array is a non-POD type. If the type of object stored in the array is
 	/// a POD type, then any new objects created are left uninitialized.
 	///
+	/// The $init$ parameter must not refer to an element that already exists in the array.
+	///
 	/// \also	$@Array::GetArrayElementCount@$
 	/// \also	$@Array::AppendArrayElement@$
 	/// \also	$@Array::InsertArrayElement@$
@@ -126,6 +128,8 @@ namespace Terathon
 	/// depending on whether an lvalue reference or rvalue reference is passed to the function.
 	/// If the parameter is omitted, then a default-constructed element is appended to the array.
 	/// The return value is a pointer to the newly appended element in the array.
+	///
+	/// The $element$ parameter must not refer to an element that already exists in the array.
 	///
 	/// \also	$@Array::InsertArrayElement@$
 	/// \also	$@Array::RemoveArrayElement@$
@@ -153,6 +157,8 @@ namespace Terathon
 	/// new size are default-constructed if the type of object stored in the array is a non-POD type, and the
 	/// elements are left uninitialized if the type of object stored in the array is a POD type.
 	///
+	/// The $element$ parameter must not refer to an element that already exists in the array.
+	///
 	/// \also	$@Array::RemoveArrayElement@$
 	/// \also	$@Array::AppendArrayElement@$
 	/// \also	$@Array::GetArrayElementCount@$
@@ -171,8 +177,8 @@ namespace Terathon
 	/// When the existing elements are moved, they are move-constructed to their new locations, and the old
 	/// objects are destroyed.
 	///
-	/// If the $index$ parameter is greater than or equal to the current size of the array, then
-	/// calling the $RemoveArrayElement$ function has no effect.
+	/// If the $index$ parameter is negative or greater than or equal to the current size of the array,
+	/// then calling the $RemoveArrayElement$ function has no effect.
 	///
 	/// \also	$@Array::RemoveLastArrayElement@$
 	/// \also	$@Array::InsertArrayElement@$
@@ -298,11 +304,11 @@ namespace Terathon
 	template <typename type>
 	int32 ImmutableArray<type>::FindArrayElementIndex(const type& element) const
 	{
-		for (machine a = 0; a < elementCount; a++)
+		for (int32 a = 0; a < elementCount; a++)
 		{
 			if (arrayPointer[a] == element)
 			{
-				return (int32(a));
+				return (a);
 			}
 		}
 
@@ -318,7 +324,7 @@ namespace Terathon
 			return (false);
 		}
 
-		for (machine a = 0; a < count; a++)
+		for (int32 a = 0; a < count; a++)
 		{
 			if (arrayPointer[a] != array.arrayPointer[a])
 			{
@@ -331,7 +337,7 @@ namespace Terathon
 
 
 	template <typename type, int32 baseCount = 0>
-	class Array final : public ImmutableArray<type>
+	class Array : public ImmutableArray<type>
 	{
 		private:
 
@@ -393,7 +399,7 @@ namespace Terathon
 			arrayPointer = reinterpret_cast<type *>(arrayStorage);
 		}
 
-		for (machine a = 0; a < elementCount; a++)
+		for (int32 a = 0; a < elementCount; a++)
 		{
 			new(&arrayPointer[a]) type(array.arrayPointer[a]);
 		}
@@ -403,11 +409,15 @@ namespace Terathon
 	Array<type, baseCount>::Array(Array&& array)
 	{
 		elementCount = array.elementCount;
+		array.elementCount = 0;
 
 		if (elementCount > baseCount)
 		{
 			reservedCount = array.reservedCount;
 			arrayPointer = array.arrayPointer;
+
+			array.reservedCount = baseCount;
+			array.arrayPointer = reinterpret_cast<type *>(array.arrayStorage);
 		}
 		else
 		{
@@ -415,23 +425,19 @@ namespace Terathon
 			arrayPointer = reinterpret_cast<type *>(arrayStorage);
 
 			type *pointer = array.arrayPointer;
-			for (machine a = 0; a < elementCount; a++)
+			for (int32 a = 0; a < elementCount; a++)
 			{
 				new(&arrayPointer[a]) type(static_cast<type&&>(pointer[a]));
 				pointer[a].~type();
 			}
 		}
-
-		array.elementCount = 0;
-		array.reservedCount = baseCount;
-		array.arrayPointer = reinterpret_cast<type *>(array.arrayStorage);
 	}
 
 	template <typename type, int32 baseCount>
 	Array<type, baseCount>::~Array()
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -447,7 +453,7 @@ namespace Terathon
 	void Array<type, baseCount>::ClearArray(void)
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -459,7 +465,7 @@ namespace Terathon
 	void Array<type, baseCount>::PurgeArray(void)
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -478,11 +484,12 @@ namespace Terathon
 	template <typename type, int32 baseCount>
 	void Array<type, baseCount>::SetReservedCount(int32 count)
 	{
-		reservedCount = Max(Max(count, 4), reservedCount + Max((reservedCount / 2 + 3) & ~3, baseCount));
-		type *newPointer = reinterpret_cast<type *>(new char[sizeof(type) * reservedCount]);
+		count = Max(Max(count, 4), reservedCount + Max((reservedCount / 2 + 3) & ~3, baseCount));
+		type *newPointer = reinterpret_cast<type *>(new char[sizeof(type) * count]);
+		reservedCount = count;
 
 		type *pointer = arrayPointer;
-		for (machine a = 0; a < elementCount; a++)
+		for (int32 a = 0; a < elementCount; a++)
 		{
 			new(&newPointer[a]) type(static_cast<type&&>(*pointer));
 			pointer->~type();
@@ -518,7 +525,7 @@ namespace Terathon
 		if (count > elementCount)
 		{
 			type *pointer = arrayPointer + (elementCount - 1);
-			for (machine a = elementCount; a < count; a++)
+			for (int32 a = elementCount; a < count; a++)
 			{
 				new(++pointer) type;
 			}
@@ -526,7 +533,7 @@ namespace Terathon
 		else if (count < elementCount)
 		{
 			type *pointer = arrayPointer + elementCount;
-			for (machine a = elementCount - 1; a >= count; a--)
+			for (int32 a = elementCount - 1; a >= count; a--)
 			{
 				(--pointer)->~type();
 			}
@@ -546,7 +553,7 @@ namespace Terathon
 		if (count > elementCount)
 		{
 			type *pointer = arrayPointer + (elementCount - 1);
-			for (machine a = elementCount; a < count; a++)
+			for (int32 a = elementCount; a < count; a++)
 			{
 				new(++pointer) type(init);
 			}
@@ -554,7 +561,7 @@ namespace Terathon
 		else if (count < elementCount)
 		{
 			type *pointer = arrayPointer + elementCount;
-			for (machine a = elementCount - 1; a >= count; a--)
+			for (int32 a = elementCount - 1; a >= count; a--)
 			{
 				(--pointer)->~type();
 			}
@@ -607,7 +614,7 @@ namespace Terathon
 			}
 
 			type *pointer = &arrayPointer[elementCount - 1];
-			for (machine a = elementCount; a < index; a++)
+			for (int32 a = elementCount; a < index; a++)
 			{
 				new(++pointer) type;
 			}
@@ -624,7 +631,7 @@ namespace Terathon
 			}
 
 			type *pointer = &arrayPointer[elementCount];
-			for (machine a = elementCount; a > index; a--)
+			for (int32 a = elementCount; a > index; a--)
 			{
 				new(pointer) type(static_cast<type&&>(pointer[-1]));
 				(--pointer)->~type();
@@ -638,12 +645,12 @@ namespace Terathon
 	template <typename type, int32 baseCount>
 	void Array<type, baseCount>::RemoveArrayElement(int32 index)
 	{
-		if (index < elementCount)
+		if (uint32(index) < uint32(elementCount))
 		{
 			type *pointer = &arrayPointer[index];
 			pointer->~type();
 
-			for (machine a = index + 1; a < elementCount; a++)
+			for (int32 a = index + 1; a < elementCount; a++)
 			{
 				new(pointer) type(static_cast<type&&>(pointer[1]));
 				(++pointer)->~type();
@@ -722,7 +729,7 @@ namespace Terathon
 		if (reservedCount > 0)
 		{
 			arrayPointer = reinterpret_cast<type *>(new char[sizeof(type) * reservedCount]);
-			for (machine a = 0; a < elementCount; a++)
+			for (int32 a = 0; a < elementCount; a++)
 			{
 				new(&arrayPointer[a]) type(array.arrayPointer[a]);
 			}
@@ -749,7 +756,7 @@ namespace Terathon
 	Array<type, 0>::~Array()
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -761,7 +768,7 @@ namespace Terathon
 	void Array<type, 0>::ClearArray(void)
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -773,7 +780,7 @@ namespace Terathon
 	void Array<type, 0>::PurgeArray(void)
 	{
 		type *pointer = arrayPointer + elementCount;
-		for (machine a = elementCount - 1; a >= 0; a--)
+		for (int32 a = elementCount - 1; a >= 0; a--)
 		{
 			(--pointer)->~type();
 		}
@@ -794,7 +801,7 @@ namespace Terathon
 		type *pointer = arrayPointer;
 		if (pointer)
 		{
-			for (machine a = 0; a < elementCount; a++)
+			for (int32 a = 0; a < elementCount; a++)
 			{
 				new(&newPointer[a]) type(static_cast<type&&>(*pointer));
 				pointer->~type();
@@ -827,7 +834,7 @@ namespace Terathon
 		if (count > elementCount)
 		{
 			type *pointer = arrayPointer + (elementCount - 1);
-			for (machine a = elementCount; a < count; a++)
+			for (int32 a = elementCount; a < count; a++)
 			{
 				new(++pointer) type;
 			}
@@ -835,7 +842,7 @@ namespace Terathon
 		else if (count < elementCount)
 		{
 			type *pointer = arrayPointer + elementCount;
-			for (machine a = elementCount - 1; a >= count; a--)
+			for (int32 a = elementCount - 1; a >= count; a--)
 			{
 				(--pointer)->~type();
 			}
@@ -855,7 +862,7 @@ namespace Terathon
 		if (count > elementCount)
 		{
 			type *pointer = arrayPointer + (elementCount - 1);
-			for (machine a = elementCount; a < count; a++)
+			for (int32 a = elementCount; a < count; a++)
 			{
 				new(++pointer) type(init);
 			}
@@ -863,7 +870,7 @@ namespace Terathon
 		else if (count < elementCount)
 		{
 			type *pointer = arrayPointer + elementCount;
-			for (machine a = elementCount - 1; a >= count; a--)
+			for (int32 a = elementCount - 1; a >= count; a--)
 			{
 				(--pointer)->~type();
 			}
@@ -916,7 +923,7 @@ namespace Terathon
 			}
 
 			type *pointer = &arrayPointer[elementCount - 1];
-			for (machine a = elementCount; a < index; a++)
+			for (int32 a = elementCount; a < index; a++)
 			{
 				new(++pointer) type;
 			}
@@ -933,7 +940,7 @@ namespace Terathon
 			}
 
 			type *pointer = &arrayPointer[elementCount];
-			for (machine a = elementCount; a > index; a--)
+			for (int32 a = elementCount; a > index; a--)
 			{
 				new(pointer) type(static_cast<type&&>(pointer[-1]));
 				(--pointer)->~type();
@@ -952,7 +959,7 @@ namespace Terathon
 			type *pointer = &arrayPointer[index];
 			pointer->~type();
 
-			for (machine a = index + 1; a < elementCount; a++)
+			for (int32 a = index + 1; a < elementCount; a++)
 			{
 				new(pointer) type(static_cast<type&&>(pointer[1]));
 				(++pointer)->~type();

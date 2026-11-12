@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -59,7 +59,7 @@ const TreeBase *TreeBase::GetRootNode(void) const
 
 bool TreeBase::Successor(const TreeBase *node) const
 {
-	TreeBase *super = node->superNode;
+	const TreeBase *super = node->superNode;
 	while (super)
 	{
 		if (super == this)
@@ -68,6 +68,22 @@ bool TreeBase::Successor(const TreeBase *node) const
 		}
 
 		super = super->superNode;
+	}
+
+	return (false);
+}
+
+bool TreeBase::Follower(const TreeBase *node) const
+{
+	TreeBase *prev = node->prevNode;
+	while (prev)
+	{
+		if (prev == this)
+		{
+			return (true);
+		}
+
+		prev = prev->prevNode;
 	}
 
 	return (false);
@@ -244,7 +260,7 @@ TreeBase *TreeBase::GetPreviousLevelNode(const TreeBase *node) const
 
 int32 TreeBase::GetSubnodeCount(void) const
 {
-	machine count = 0;
+	int32 count = 0;
 	const TreeBase *subnode = firstSubnode;
 	while (subnode)
 	{
@@ -252,12 +268,12 @@ int32 TreeBase::GetSubnodeCount(void) const
 		subnode = subnode->nextNode;
 	}
 
-	return (int32(count));
+	return (count);
 }
 
 int32 TreeBase::GetSubtreeNodeCount(void) const
 {
-	machine count = 0;
+	int32 count = 0;
 	const TreeBase *subnode = firstSubnode;
 	while (subnode)
 	{
@@ -265,12 +281,12 @@ int32 TreeBase::GetSubtreeNodeCount(void) const
 		subnode = GetNextTreeNode(subnode);
 	}
 
-	return (int32(count));
+	return (count);
 }
 
 int32 TreeBase::GetNodeIndex(void) const
 {
-	machine index = 0;
+	int32 index = 0;
 	const TreeBase *element = this;
 	for (;;)
 	{
@@ -283,12 +299,12 @@ int32 TreeBase::GetNodeIndex(void) const
 		index++;
 	}
 
-	return (int32(index));
+	return (index);
 }
 
 int32 TreeBase::GetNodeDepth(void) const
 {
-	machine depth = 0;
+	int32 depth = 0;
 	const TreeBase *element = this;
 	for (;;)
 	{
@@ -301,7 +317,7 @@ int32 TreeBase::GetNodeDepth(void) const
 		depth++;
 	}
 
-	return (int32(depth));
+	return (depth);
 }
 
 void TreeBase::MoveSubtree(TreeBase *super)

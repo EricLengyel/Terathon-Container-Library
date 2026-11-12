@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -112,6 +112,17 @@ bool GraphBase::Predecessor(const GraphElementBase *first, const GraphElementBas
 			{
 				if (finish == second)
 				{
+					for (;;)
+					{
+						element = readyList.GetFirstListElement();
+						if (!element)
+						{
+							break;
+						}
+
+						elementList.AppendListElement(element);
+					}
+
 					result = true;
 					goto end;
 				}
@@ -124,17 +135,6 @@ bool GraphBase::Predecessor(const GraphElementBase *first, const GraphElementBas
 	}
 
 	end:
-	for (;;)
-	{
-		GraphElementBase *element = readyList.GetFirstListElement();
-		if (!element)
-		{
-			break;
-		}
-
-		elementList.AppendListElement(element);
-	}
-
 	for (;;)
 	{
 		GraphElementBase *element = visitedList.GetFirstListElement();

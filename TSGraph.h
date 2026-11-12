@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -362,6 +362,10 @@ namespace Terathon
 		protected:
 
 			GraphRelation(GraphElement<elementType, relationType> *start, GraphElement<elementType, relationType> *finish) : GraphRelationFinish(start, finish)
+			{
+			}
+
+			GraphRelation(const GraphRelation& graphRelation) : GraphRelationFinish(graphRelation.GraphRelationStart::GetStartElement(), graphRelation.GraphRelationFinish::GetFinishElement())
 			{
 			}
 
@@ -808,6 +812,10 @@ namespace Terathon
 	/// element specified by the $second$ parameter in a graph, and it returns $false$ otherwise. In order for the
 	/// first element to precede the second, there must be a sequence of relations starting at the first element that can
 	/// be followed through a sequence of elements that ultimately finishes at the second element.
+	///
+	/// The $first$ and $second$ parameters must both point to members of the graph for which the $Predecessor$ function
+	/// is called. The $Predecessor$ function can change the order of elements in the graph (without affecting the relations),
+	/// so it should not be called during an iteration over the graph's elements.
 	///
 	/// \also	$@GraphElement::GetFirstOutgoingRelation@$
 	/// \also	$@GraphElement::GetLastOutgoingRelation@$

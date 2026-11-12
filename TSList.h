@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -98,7 +98,7 @@ namespace Terathon
 
 			TERATHON_API ~ListBase();
 
-			TERATHON_API ListElementBase *operator [](machine index) const;
+			TERATHON_API ListElementBase *operator [](int32 index) const;
 
 			ListElementBase *GetFirstListElement(void) const
 			{
@@ -296,7 +296,7 @@ namespace Terathon
 	/// \t...\n
 	/// }
 	///
-	/// \operator	type *operator [](machine index) const;
+	/// \operator	type *operator [](int32 index) const;
 	///				Returns the element of a list whose zero-based index is $index$. If $index$ is
 	///				greater than or equal to the number of elements in the list, then the return
 	///				value is $nullptr$.
@@ -406,6 +406,7 @@ namespace Terathon
 	/// \proto	void InsertListElementBefore(ListElement<type> *element, ListElement<type> *before);
 	///
 	/// \param	element		A pointer to the object to add to the list.
+	///						The parameter must not point to an object that is already a member of the list.
 	/// \param	before		A pointer to the object before which the new object is inserted.
 	///						This parameter must point to an object that is already a member of the list.
 	///
@@ -429,6 +430,7 @@ namespace Terathon
 	/// \proto	void InsertListElementAfter(ListElement<type> *element, ListElement<type> *after);
 	///
 	/// \param	element		A pointer to the object to add to the list.
+	///						The parameter must not point to an object that is already a member of the list.
 	/// \param	after		A pointer to the object after which the new object is inserted.
 	///						This parameter must point to an object that is already a member of the list.
 	///
@@ -496,7 +498,7 @@ namespace Terathon
 
 			inline List() = default;
 
-			type *operator [](machine index) const
+			type *operator [](int32 index) const
 			{
 				return (static_cast<type *>(static_cast<ListElement<type> *>(ListBase::operator [](index))));
 			}

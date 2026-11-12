@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Container Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -122,7 +122,7 @@ namespace Terathon
 
 			TERATHON_API ~MapBase();
 
-			TERATHON_API MapElementBase *operator [](machine index) const;
+			TERATHON_API MapElementBase *operator [](int32 index) const;
 
 			MapElementBase *GetRootMapElement(void) const
 			{
@@ -343,7 +343,7 @@ namespace Terathon
 	///	\t...\n
 	/// }
 	///
-	/// \operator	type *operator [](machine index) const;
+	/// \operator	type *operator [](int32 index) const;
 	///				Returns the element of a map whose zero-based index is $index$. If $index$ is
 	///				greater than or equal to the number of elements in the map, then the return
 	///				value is $nullptr$.
@@ -533,7 +533,7 @@ namespace Terathon
 
 			inline Map() = default;
 
-			type *operator [](machine index) const
+			type *operator [](int32 index) const
 			{
 				return (static_cast<type *>(static_cast<MapElement<type> *>(MapBase::operator [](index))));
 			}
