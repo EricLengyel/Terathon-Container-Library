@@ -1,6 +1,6 @@
 //
 // This file is part of the Terathon Common Library, by Eric Lengyel.
-// Copyright 1999-2025, Terathon Software LLC
+// Copyright 1999-2026, Terathon Software LLC
 //
 // This software is distributed under the MIT License.
 // Separate proprietary licenses are available from Terathon Software.
@@ -132,7 +132,6 @@ namespace Terathon
 		#define restrict __restrict
 
 		#pragma warning(disable: 4100)		// unreferenced formal parameter
-		#pragma warning(disable: 4244)		// conversion, possible loss of data
 		#pragma warning(disable: 4324)		// structure was padded due to alignment specifier
 		#pragma warning(disable: 4458)		// declaration hides class member
 		#pragma warning(disable: 4522)		// multiple assignment operators specified
@@ -217,17 +216,17 @@ namespace Terathon
 	#undef ClearMemory
 
 
-	inline void CopyMemory(const void *source, void *dest, uint32 size)
+	inline void CopyMemory(const void *source, void *dest, uint64 size)
 	{
 		memcpy(dest, source, size);
 	}
 
-	inline void FillMemory(void *ptr, uint32 size, uint8 value)
+	inline void FillMemory(void *ptr, uint64 size, uint8 value)
 	{
 		memset(ptr, value, size);
 	}
 
-	inline void ClearMemory(void *ptr, uint32 size)
+	inline void ClearMemory(void *ptr, uint64 size)
 	{
 		memset(ptr, 0, size);
 	}
